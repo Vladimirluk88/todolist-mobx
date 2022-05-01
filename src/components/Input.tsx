@@ -1,22 +1,20 @@
 import { useState } from "react"
+import { observer } from 'mobx-react';
+import { toDoStore } from '../mobx/toDo.store';
+import { Button } from "antd";
+import "./Input.scss"
 
-type inputProps = {
-    submit: (message: string) => void
-}
-
-export const Input: React.FC<inputProps> = ({submit}) => {
+export const Input: React.FC = observer(() => {
     const [unitText, setUnitText] = useState("");
     return <>
     <form onSubmit={(e) => {
         e.preventDefault();
-        submit(unitText);
+        toDoStore.pushToDo(unitText);
     }}>
     <label htmlFor="unitTextInput">
     <input type="text" id="unitTextInput" placeholder="Введите текст для листа" onChange={(e) => setUnitText(e.currentTarget.value)}/>
     </label>
-    <button type="submit">
-        Добавить
-    </button>
+    <Button htmlType="submit" type="primary">Добавить</Button>
     </form>
     </>
-}
+})

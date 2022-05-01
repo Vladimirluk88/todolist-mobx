@@ -1,53 +1,58 @@
-import React, { useEffect, useState } from "react";
+import { observer } from "mobx-react";
+import React from "react";
+import { listUnitType, toDoStore } from "../mobx/toDo.store";
 import "./List.scss";
 
-type listUnitType = {
-    id: number,
-    text: string,
-    complete: boolean
-}
-
-type listContainerType = Array<listUnitType>;
-
-type listPropsType = {
-    searchBy: string,
-    newUnit: string
-}
-
-export const List: React.FC<listPropsType> = React.memo(({searchBy, newUnit}) => {
-    const [listContainer, setListContainer] = useState([] as listContainerType);
+export const List: React.FC = observer(() => {
     let searchByBool: boolean | null = null;
-    if (searchBy === "Выполненные") {
+    if (toDoStore.searchBy === "Выполненные") {
         searchByBool = true;
-    } else if (searchBy === "Невыполненные") {
+    } else if (toDoStore.searchBy === "Невыполненные") {
         searchByBool = false;
     }
-    useEffect(() => {
-        if(newUnit !== ""){ setListContainer([...listContainer, {id: listContainer.length+1, text: newUnit, complete: false}]);
-    }
-    }, [newUnit]);
-    let changedList = listContainer.filter((u) => {
-        if(u.complete === searchByBool || searchByBool === null) {
-            return u
-        }
-    });
-    return <>
-        {changedList.map((u: listUnitType) => {
-            return <div key={u.id} className="list__unit">
-                <div className="list__unit_id">
-                {u.id}
-                </div>
-                <div className="list__unit_text">
-                {u.text}
-                </div>
-                <input type="checkbox" defaultChecked={u.complete} onChange={() => setListContainer([...listContainer.filter(u1 => {
-                    if( u1 !== u ) {
-                        return u1
-                    }
-                    u1.complete = !u1.complete
-                    return u1
-                })])} />
-            </div>
-        })}
-        </>
-})
+    return (
+        <div className="list__wrapper">
+            <div className="list">
+            {toDoStore.toDoList.map((toDo: listUnitType) => {
+                if (toDo.complete === searchByBool || searchByBool === null) {
+                    return (
+                        <div key={toDo.id} className="list__unit">
+                            <div className="list__unit-description">
+                                <div className="list__unit_text">
+                                    {toDo.text}
+                                </div>
+                            </div>
+                            <div className="list__checkbox_wrapper">
+                            <div>
+                                <span>Выполнено</span>
+                                <input
+                                    id="complete-checkbox"
+                                    type="checkbox"
+                                    defaultChecked={toDo.complete}
+                                    onChange={() =>
+                                        toDoStore.completeToDo(toDo.id - 1)
+                                    }
+                                />
+                            </div>
+                            <div>
+                                <span>Удалить</span>
+                                <input
+                                    id="delete-checkbox"
+                                    type="checkbox"
+                                    checked={false}
+                                    onChange={() =>
+                                        toDoStore.deleteToDo(toDo.id - 1)
+                                    }
+                                />
+                            </div>
+                            </div>
+                        </div>
+                    );
+                } else {
+                    return <></>;
+                }
+            })}
+        </div>
+        </div>
+    );
+});

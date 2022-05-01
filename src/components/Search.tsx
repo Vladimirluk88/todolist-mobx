@@ -1,16 +1,17 @@
+import { Select } from "antd";
+import { Option } from "antd/lib/mentions";
+import { observer } from "mobx-react";
+import { toDoStore } from "../mobx/toDo.store";
+import "./Search.scss"
 
-type searchComponentType = {
-    setSearchBy: (option: string) => void
-}
-
-export const Search: React.FC<searchComponentType> = ({setSearchBy}) => {
+export const Search: React.FC = observer(() => {
     return <>
-    <select onChange={(e) => {
-        setSearchBy(e.currentTarget.value);
+    <Select className="select" defaultValue="Все" onChange={(e) => {
+        toDoStore.changeSearchBy(e);
     }}>
-        <option>Все</option>
-        <option>Выполненные</option>
-        <option>Невыполненные</option>
-    </select>
+        <Option value="Все">Все</Option>
+        <Option value="Выполненные">Выполненные</Option>
+        <Option value="Невыполненные">Невыполненные</Option>
+    </Select>
     </>
-}
+})
