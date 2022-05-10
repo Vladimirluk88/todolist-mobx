@@ -11,8 +11,8 @@ export const List: React.FC = observer(() => {
         searchByBool = false;
     }
     return (
-        <div className="list__wrapper">
-            <div className="list">
+        <div className="list">
+            <div className="list_wrapper">
             {toDoStore.toDoList.map((toDo: listUnitType) => {
                 if (toDo.complete === searchByBool || searchByBool === null) {
                     return (
@@ -30,7 +30,7 @@ export const List: React.FC = observer(() => {
                                     type="checkbox"
                                     defaultChecked={toDo.complete}
                                     onChange={() =>
-                                        toDoStore.completeToDo(toDo.id - 1)
+                                        toDoStore.completeToDo(toDo.id)
                                     }
                                 />
                             </div>
@@ -41,7 +41,7 @@ export const List: React.FC = observer(() => {
                                     type="checkbox"
                                     checked={false}
                                     onChange={() =>
-                                        toDoStore.deleteToDo(toDo.id - 1)
+                                        toDoStore.deleteToDo(toDo.id)
                                     }
                                 />
                             </div>

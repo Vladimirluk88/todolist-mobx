@@ -16,18 +16,18 @@ class Store {
         makeAutoObservable(this);
     }
     pushToDo(toDoText: string) {
-        this.toDoList.push({id: this.toDoList.length+1, text: toDoText, complete: false});
+        this.toDoList.push({id: this.toDoList.length === 0 ? 1 : this.toDoList[this.toDoList.length-1].id+1, text: toDoText, complete: false});
     }
     deleteToDo(id: number) {
-        this.toDoList.splice(id, 1);
-        this.toDoList.forEach((elem, index) => {
-            if(elem.id!== index + 1) {
-                elem.id = index + 1;
-            }
-        })
+        this.toDoList = this.toDoList.filter((u) => u.id !== id);
     }
     completeToDo(id: number) {
-        this.toDoList[id].complete = !this.toDoList[id].complete;
+        this.toDoList.map((u) => {
+            if(u.id === id) {
+                u.complete = !u.complete
+            }
+            return u
+        })
     }
     changeSearchBy(text: string) {
         this.searchBy = text;
